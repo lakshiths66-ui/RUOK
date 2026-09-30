@@ -11,6 +11,7 @@ import { generatePseudonymousDeviceId, simulateEncryptChunk, simulateDecryptChun
 import { evaluateRules } from './ruleEngine';
 import { evaluateMLModel, runTwoStageRiskPipeline } from './mlEngine';
 import { RISK_POLICY } from './policy';
+import { evaluateGeoFenceAnomaly } from './geoFenceEngine';
 
 export async function runAutomatedTests(
   onProgress?: (testId: string, result: AutomatedTestResult) => void
@@ -410,6 +411,50 @@ export async function runAutomatedTests(
       status: passed ? 'passed' : 'failed',
       durationMs: Number((performance.now() - start).toFixed(2)),
       assertionDescription: 'Rules -> ML inference -> SHAP explainability -> Policy -> Adaptive action -> Audit trail roundtrip.',
+      logOutput: logs,
+    });
+  }
+
+  // --- SECURITY TEST (6): GEOFENCE & RESIDENTIAL ISP BOUNDARY ---
+  // Test 13: Geo-Fencing Boundary & Haversine Anomaly Validation
+  {
+    const start = performance.now();
+    const logs: string[] = [];
+    logs.push('Testing Geo-Fencing & Home ISP perimeter validation:');
+    logs.push('Established Zone: Chennai Primary Household (ACT Fibernet AS133694, 45km radius)');
+
+    // Test point 1: Within home zone (12 km from Chennai center)
+    const localResult = evaluateGeoFenceAnomaly(
+      { lat: 13.0400, lng: 80.2000 },
+      'ACT Fibernet (Beam Telecom)',
+      'AS133694',
+      'Chennai',
+      'India',
+      '182.73.10.xx',
+      'sess_local_01'
+    );
+    logs.push(`Local Session Delta: ${localResult.distanceKm} km -> Breached: ${localResult.isBreached}`);
+
+    // Test point 2: Anomaly outside zone (Frankfurt cloud data center, 6,820 km)
+    const breachResult = evaluateGeoFenceAnomaly(
+      { lat: 50.1109, lng: 8.6821 },
+      'DigitalOcean Cloud Hosting ASN',
+      'AS14061',
+      'Frankfurt',
+      'Germany',
+      '159.65.120.xx',
+      'sess_breach_02'
+    );
+    logs.push(`Remote Anomaly Delta: ${breachResult.distanceKm} km -> Breached: ${breachResult.isBreached}, Severity: ${breachResult.breachEvent?.breachSeverity}`);
+
+    const passed = !localResult.isBreached && breachResult.isBreached && breachResult.breachEvent?.breachSeverity === 'CRITICAL';
+    addResult({
+      id: 'test_sec_geofence_haversine_anomaly',
+      title: 'Security: Home ISP Geo-Fencing & Haversine Boundary Validation',
+      category: 'Security',
+      status: passed ? 'passed' : 'failed',
+      durationMs: Number((performance.now() - start).toFixed(2)),
+      assertionDescription: 'Sessions outside established residential ISP boundary (>45km) and ASN mismatch must trigger CRITICAL audit event.',
       logOutput: logs,
     });
   }

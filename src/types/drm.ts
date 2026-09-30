@@ -128,3 +128,33 @@ export interface AutomatedTestResult {
   assertionDescription: string;
   logOutput: string[];
 }
+
+export interface GeoFenceZone {
+  homeName: string;
+  establishedIsp: string;
+  establishedAsn: string;
+  centerCoordinates: { lat: number; lng: number };
+  radiusKm: number;
+  city: string;
+  country: string;
+}
+
+export interface GeoFenceBreachEvent {
+  id: string;
+  sessionId: string;
+  userId: string;
+  timestamp: string;
+  establishedZone: GeoFenceZone;
+  detectedSession: {
+    ipMasked: string;
+    isp: string;
+    asn: string;
+    city: string;
+    country: string;
+    coordinates: { lat: number; lng: number };
+  };
+  distanceKm: number;
+  breachSeverity: 'HIGH' | 'CRITICAL';
+  suggestedAction: 'STEP_UP_MFA' | 'RESTRICT_STREAM' | 'TERMINATE_SESSION';
+}
+

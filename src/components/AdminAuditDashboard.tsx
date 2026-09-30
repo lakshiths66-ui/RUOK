@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Shield, Activity, Database, AlertTriangle, CheckCircle, 
-  Trash2, RefreshCw, Search, Filter, Lock, Terminal
+  Trash2, RefreshCw, Search, Filter, Lock, Terminal, Compass
 } from 'lucide-react';
 import { AuditLogEntry, RiskAssessment } from '../types/drm';
 
@@ -9,12 +9,14 @@ interface AdminAuditDashboardProps {
   auditLogs: AuditLogEntry[];
   recentAssessments: RiskAssessment[];
   onPurgeExpiredLogs: () => void;
+  onViewGeofenceModal?: () => void;
 }
 
 export const AdminAuditDashboard: React.FC<AdminAuditDashboardProps> = ({
   auditLogs,
   recentAssessments,
   onPurgeExpiredLogs,
+  onViewGeofenceModal,
 }) => {
   const [severityFilter, setSeverityFilter] = useState<'all' | 'info' | 'warn' | 'critical'>('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -240,6 +242,17 @@ export const AdminAuditDashboard: React.FC<AdminAuditDashboardProps> = ({
                   <span className="text-slate-400 font-sans">{log.actor}</span>
                 </div>
                 <p className="text-slate-300 font-sans text-xs">{log.details}</p>
+                {log.eventType.includes('GEOFENCE') && onViewGeofenceModal && (
+                  <div className="pt-1">
+                    <button
+                      onClick={onViewGeofenceModal}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-semibold rounded bg-rose-950/80 border border-rose-700/80 text-rose-300 hover:bg-rose-900/80 transition-colors cursor-pointer"
+                    >
+                      <Compass className="w-3.5 h-3.5 text-cyan-400" />
+                      <span>Open Geodetic Radar Map Visualizer</span>
+                    </button>
+                  </div>
+                )}
               </div>
 
               <div className="text-right shrink-0 text-[11px] text-slate-500">

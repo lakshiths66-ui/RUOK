@@ -1,9 +1,11 @@
 import React from 'react';
-import { ShieldCheck, Play, Activity, Cpu, Database, CheckSquare, BookOpen, AlertTriangle } from 'lucide-react';
+import { ShieldCheck, Play, Activity, Cpu, Database, CheckSquare, BookOpen, AlertTriangle, Fingerprint, Code } from 'lucide-react';
 
 export type NavTab = 
   | 'player' 
   | 'risk_lab' 
+  | 'forensic'
+  | 'integration'
   | 'scenarios' 
   | 'security' 
   | 'admin' 
@@ -35,12 +37,12 @@ export const Header: React.FC<HeaderProps> = ({
           AegisDRM
         </a>
         <span className="hidden sm:inline text-xs text-slate-500 font-mono tracking-wider">
-          v2.4-RESEARCH
+          v2.4-PROD
         </span>
       </div>
 
       {/* Zone 2: Clean text navigation links with active state */}
-      <nav className="hidden lg:flex items-center gap-6 text-xs font-medium text-slate-400">
+      <nav className="hidden lg:flex items-center gap-5 text-xs font-medium text-slate-400">
         <button
           onClick={() => onTabChange('player')}
           className={`transition-colors hover:text-white whitespace-nowrap cursor-pointer ${
@@ -58,16 +60,32 @@ export const Header: React.FC<HeaderProps> = ({
           Risk Engine & SHAP
         </button>
         <button
-          onClick={() => onTabChange('scenarios')}
+          onClick={() => onTabChange('forensic')}
           className={`transition-colors hover:text-white whitespace-nowrap cursor-pointer ${
+            activeTab === 'forensic' ? 'text-cyan-400 font-semibold border-b-2 border-cyan-400 pb-0.5' : ''
+          }`}
+        >
+          Forensic Decoder
+        </button>
+        <button
+          onClick={() => onTabChange('integration')}
+          className={`transition-colors hover:text-white whitespace-nowrap cursor-pointer ${
+            activeTab === 'integration' ? 'text-cyan-400 font-semibold border-b-2 border-cyan-400 pb-0.5' : ''
+          }`}
+        >
+          OTT SDK & EME
+        </button>
+        <button
+          onClick={() => onTabChange('scenarios')}
+          className={`hidden xl:block transition-colors hover:text-white whitespace-nowrap cursor-pointer ${
             activeTab === 'scenarios' ? 'text-cyan-400 font-semibold border-b-2 border-cyan-400 pb-0.5' : ''
           }`}
         >
-          Scenario Matrix (15)
+          Scenarios (15)
         </button>
         <button
           onClick={() => onTabChange('security')}
-          className={`transition-colors hover:text-white whitespace-nowrap cursor-pointer ${
+          className={`hidden xl:block transition-colors hover:text-white whitespace-nowrap cursor-pointer ${
             activeTab === 'security' ? 'text-cyan-400 font-semibold border-b-2 border-cyan-400 pb-0.5' : ''
           }`}
         >
@@ -83,15 +101,15 @@ export const Header: React.FC<HeaderProps> = ({
         </button>
         <button
           onClick={() => onTabChange('tests')}
-          className={`transition-colors hover:text-white whitespace-nowrap cursor-pointer ${
+          className={`hidden 2xl:block transition-colors hover:text-white whitespace-nowrap cursor-pointer ${
             activeTab === 'tests' ? 'text-cyan-400 font-semibold border-b-2 border-cyan-400 pb-0.5' : ''
           }`}
         >
-          Test Suite (12/12)
+          Test Suite (12)
         </button>
         <button
           onClick={() => onTabChange('research')}
-          className={`transition-colors hover:text-white whitespace-nowrap cursor-pointer ${
+          className={`hidden 2xl:block transition-colors hover:text-white whitespace-nowrap cursor-pointer ${
             activeTab === 'research' ? 'text-cyan-400 font-semibold border-b-2 border-cyan-400 pb-0.5' : ''
           }`}
         >

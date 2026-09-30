@@ -129,7 +129,7 @@ export const TestSuiteBenchmark: React.FC = () => {
           className="flex items-center justify-center gap-2 px-4 py-2 text-xs font-semibold rounded bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 text-white transition-colors cursor-pointer shrink-0"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${isRunning ? 'animate-spin' : ''}`} />
-          <span>{isRunning ? 'Executing Tests...' : 'Re-Run All 12 Tests'}</span>
+          <span>{isRunning ? 'Executing Tests...' : `Re-Run All ${tests.length || 13} Tests`}</span>
         </button>
       </div>
 

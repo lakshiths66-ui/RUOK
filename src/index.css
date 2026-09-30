@@ -1,1 +1,64 @@
 @import "tailwindcss";
+
+/* Simplified Print-Friendly CSS Classes for Geofence Breach Report & PDF Output */
+@media print {
+  /* Hide non-modal and navigational interface chrome */
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+  }
+  
+  header, nav, footer, .no-print {
+    display: none !important;
+  }
+
+  #geofence-alert-modal-container {
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: none !important;
+    overflow: visible !important;
+    border: 1px solid #94a3b8 !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  .print-friendly-report {
+    display: block !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
+    page-break-inside: avoid;
+  }
+}
+
+.print-friendly-report {
+  background-color: #020617;
+  color: #f8fafc;
+}
+
+/* CSS Animation: Gently pulses the border of the map container when a breach is triggered to draw immediate analyst attention */
+@keyframes geofence-map-border-pulse {
+  0% {
+    border-color: rgba(244, 63, 94, 0.4);
+    box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.25), inset 0 0 8px rgba(225, 29, 72, 0.08);
+  }
+  50% {
+    border-color: rgba(251, 113, 133, 0.95);
+    box-shadow: 0 0 24px 4px rgba(225, 29, 72, 0.45), inset 0 0 16px rgba(225, 29, 72, 0.22);
+  }
+  100% {
+    border-color: rgba(244, 63, 94, 0.4);
+    box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.25), inset 0 0 8px rgba(225, 29, 72, 0.08);
+  }
+}
+
+#geofence-alert-modal-container .radar-map-container,
+#geofence-alert-modal-container #geofence-radar-map-container,
+.map-border-breach-pulse {
+  animation: geofence-map-border-pulse 2.2s ease-in-out infinite;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
